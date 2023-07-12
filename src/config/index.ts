@@ -24,7 +24,7 @@ export default {
     facebook: {
         clientId: process.env.FACEBOOK_CLIENT_ID || "",
         clientSecret: process.env.FACEBOOK_CLIENT_SECRET || "",
-        callbackUrl: process.env.UNOX_API_URL ? `${process.env.UNOX_API_URL}/api/facebook/callback`
+        callbackUrl: `${process.env.UNOX_API_URL}/api/facebook/callback`
     },
     
     sessionSecret: process.env.SESSION_SECRET || "",
