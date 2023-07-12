@@ -1,6 +1,6 @@
-const mailchimpClient = require("@mailchimp/mailchimp_transactional")(
-    "md-GvN82FFThNQJbEvfl_QuJA"
-);
+import config from "../config";
+
+const mailchimpClient = require("@mailchimp/mailchimp_transactional")(config.mandrillKey);
 
 export default {
   sendTemplateEmail: (
