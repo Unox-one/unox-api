@@ -1,6 +1,3 @@
-import dotenv from "dotenv";
-dotenv.config();
-
 export default {
     db: {
         url: process.env.DATABASE_URL || "mongodb://localhost:27017/unox-api",
@@ -26,7 +23,8 @@ export default {
         clientSecret: process.env.FACEBOOK_CLIENT_SECRET || "",
         callbackUrl: `${process.env.UNOX_API_URL}/api/facebook/callback`
     },
-    
+
+    mandrillKey: process.env.MANDRILL_API_KEY || "",
     sessionSecret: process.env.SESSION_SECRET || "",
     saltRounds : 10,
     otpLength: 6,
