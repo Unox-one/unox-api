@@ -18,6 +18,12 @@ const { PORT = 4000 } = process.env;
 
 app.use(logger("dev"));
 app.use(cors());
+app.use((req: Request, res: Response, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  next();
+});
 app.use(express.json());
 app.use(cookieParser());
 app.use(passport.initialize());
