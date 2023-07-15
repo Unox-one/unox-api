@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import logger from "morgan";
 import cors from "cors";
 import dotenv from "dotenv";
+import { Request, Response } from "express";
 import HealthChecker from "./routes";
 import Router from "./routes/routeV1";
 import { connectToDatabase } from "./db/ConnectionFactory";
