@@ -23,6 +23,12 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: "regular_user"
     },
+    category: {
+        type: String,
+    },
+    subCategory: {
+        type: String,
+    },
     isVerified: {
         type: Boolean,
         default: false
