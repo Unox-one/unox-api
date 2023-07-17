@@ -138,6 +138,6 @@ export default {
     },
 
     redirectGoogleSignup: (req: Request, res: Response) => {
-      res.redirect("https://twitter.com/search?q=ECOWAS&src=trend_click&vertical=trends");
+      res.redirect("https://unox-one-staging.netlify.app/about-you?signupType=google");
     }
 };
