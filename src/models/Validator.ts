@@ -9,6 +9,8 @@ export default {
       fullName: Joi.string(),
       password: Joi.string().required(),
       role: Joi.string().valid("regular_user", "enterprise_user"),
+      category: Joi.string(),
+      subCategory: Joi.string(),
       isVerified: Joi.boolean(),
       isActive: Joi.boolean(),
     });
