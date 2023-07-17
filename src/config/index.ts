@@ -18,12 +18,6 @@ export default {
         callbackUrl: `${process.env.UNOX_API_URL}/api/google/redirect`
     },
 
-    facebook: {
-        clientId: process.env.FACEBOOK_CLIENT_ID || "",
-        clientSecret: process.env.FACEBOOK_CLIENT_SECRET || "",
-        callbackUrl: `${process.env.UNOX_API_URL}/api/facebook/callback`
-    },
-
     mandrillKey: process.env.MANDRILL_API_KEY || "",
     sessionSecret: process.env.SESSION_SECRET || "",
     saltRounds : 10,
