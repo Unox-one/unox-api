@@ -14,5 +14,18 @@ export default {
     });
   
     return schema.validate(user);
+  },
+
+  validateCard: (card: Record<string, any>) => {
+    const schema = Joi.object({
+      user: Joi.string().required(),
+      type: Joi.string().required().valid("branded", "custom", "team"),
+      quantity: Joi.number(),
+      displayName: Joi.string(),
+      phoneNumber: Joi.string(),
+      color: Joi.string(),
+    });
+  
+    return schema.validate(card);
   }
 };
