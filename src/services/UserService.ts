@@ -58,15 +58,22 @@ export default {
         }
     },
 
-    updateUser: async (req: Request, res: Response) => {
+    updateUser: async (req: Request) => {
         try {
-            const { userId } = req.params;
+            const { userId } = req.params;            
             const user = await User.findById(userId);      
             if (!user) {
-                return sendResponse(req, res, 404, "User not found");
+                return {
+                    success: false,
+                    message: "User not found"
+                };
             }
       
-            await User.findByIdAndUpdate(userId, req.body, {new:true});
+            const updatedUser = await User.findByIdAndUpdate(userId, req.body, {new:true});
+            return {
+                success: true,
+                updatedUser
+            };
         } catch (err) {
             console.log(`Error while updating user: ${err}`);
             throw new Error(`Error while updating user: ${err}`);
