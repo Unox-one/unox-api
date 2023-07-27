@@ -55,9 +55,9 @@ export default {
 
     updateUser: async (req: Request, res: Response) => {
       try {
-        await UserService.updateUser(req, res);
+        const response = await UserService.updateUser(req);
         
-        return sendResponse(req, res, 200, "User updated successfully");
+        return sendResponse(req, res, 200, "User updated successfully", response);
       } catch (err) {
         console.log(`Error while updating user: ${err}`);
         sendResponse(req, res, 500, `An error occured while processing this request: ${err}`);
