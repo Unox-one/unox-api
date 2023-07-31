@@ -13,6 +13,7 @@ export default {
       subCategory: Joi.string(),
       isVerified: Joi.boolean(),
       isActive: Joi.boolean(),
+      apiToken: Joi.string()
     });
   
     return schema.validate(user);
@@ -21,13 +22,61 @@ export default {
   validateCard: (card: Record<string, any>) => {
     const schema = Joi.object({
       user: Joi.string().required(),
-      type: Joi.string().required().valid("branded", "custom", "team"),
+      type: Joi.string().required(),
+      color: Joi.string(),
+      font: Joi.string(),
       quantity: Joi.number(),
       displayName: Joi.string(),
       phoneNumber: Joi.string(),
-      color: Joi.string(),
+      status: Joi.string(),
+      url: Joi.string(),
+      cost: Joi.number(),
+      amountPaid: Joi.number(),
+      balance: Joi.number()
     });
   
     return schema.validate(card);
+  },
+
+  validateCardType: (cardType: Record<string, string>) => {
+    const schema = Joi.object({
+      template: Joi.string().required().valid("branded", "custom", "team"),
+    });
+  
+    return schema.validate(cardType);
+  },
+
+  validateColor: (color: Record<string, string>) => {
+    const schema = Joi.object({
+      name: Joi.string().required(),
+    });
+  
+    return schema.validate(color);
+  },
+
+  validateFont: (font: Record<string, string>) => {
+    const schema = Joi.object({
+      name: Joi.string().required(),
+    });
+  
+    return schema.validate(font);
+  },
+
+  validateDeliveryDetails: (delivery: Record<string, any>) => {
+    const schema = Joi.object({
+      user: Joi.string().required(),
+      isBatched: Joi.boolean().required(),
+      trackingId: Joi.string().required(),
+      referencePath: Joi.string(),
+      email: Joi.string().required(),
+      fullName: Joi.string().required(),
+      phoneNumber: Joi.string().required(),
+      company: Joi.string(),
+      address: Joi.string().required(),
+      city: Joi.string().required(),
+      state: Joi.string().required()
+    });
+  
+    return schema.validate(delivery);
   }
 };
