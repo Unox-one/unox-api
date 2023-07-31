@@ -8,9 +8,26 @@ const cardSchema = new Schema({
         index: true,
         required: true
     },
+    batch: {
+        type: Schema.Types.ObjectId,
+        ref: "CardBatch",
+        index: true,
+    },
     type: {
-        type: String,
+        type: Schema.Types.ObjectId,
+        ref: "CardType",
+        index: true,
         required: true
+    },
+    color: {
+        type: Schema.Types.ObjectId,
+        ref: "Color",
+        index: true,
+    },
+    font: {
+        type: Schema.Types.ObjectId,
+        ref: "Font",
+        index: true,
     },
     quantity: {
         type: Number
@@ -21,12 +38,21 @@ const cardSchema = new Schema({
     phoneNumber: {
         type: String
     },
-    color: {
+    url: {
         type: String
     },
     status: {
         type: String
     },
+    cost: {
+        type: Number
+    },
+    amountPaid: {
+        type: Number
+    },
+    balance: {
+        type: Number
+    }
 }, { 
     timestamps: true,
     versionKey: false
