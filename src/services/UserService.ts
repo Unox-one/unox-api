@@ -17,9 +17,8 @@ export default {
     signup: async (req: Request)  => {
         const { email, username} = req.body;
         const user = await User.findOne({$or: [{ email }, { username }]});
-        console.log({user});
         
-        if (!!user) {
+        if (user) {
             return {
                 success: false,
                 message: "User already exists"
@@ -142,7 +141,7 @@ export default {
     },
 
     verifyUser: async (req: Request) => {
-        const otpValidityCheck =  await verifyOtp(req);            
+        const otpValidityCheck =  await verifyOtp(req);
         if (!otpValidityCheck.success) {
             return otpValidityCheck;
         }
@@ -156,15 +155,15 @@ export default {
     },
 
     userLogin: async (req: Request) => {
-        const { username, password } = req.body;
-        if (!username || !password) {
+        const { email, username, password } = req.body;
+        if ((!email && !username) || !password) {
             return {
                 success: false,
-                message: "'Username' and 'Password' are required fields" 
+                message: "Supply your 'email or username' and 'password'" 
             }  
         }
 
-        const user = await User.findOne({$or: [{ username }, { email: username }]});
+        const user = await User.findOne({$or: [{ username }, { email }]});
 
         if (!user) {
             return {
