@@ -45,6 +45,9 @@ const userSchema = new mongoose.Schema({
         type: Date,
         default: null
     },
+    apiToken: {
+        type: String
+    }
 }, { timestamps: true })
 
 userSchema.pre("save", async function (next) {
