@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request } from "express";
 import _ from "lodash";
 import moment from "moment";
 import bcrypt from "bcrypt";
@@ -6,11 +6,9 @@ import crypto from "crypto";
 import User from "../models/User";
 import UserOtp from "../models/UserOtp";
 import Utils from "./Utils";
-import sendResponse from "./ResponseService";
 import emailService from "./EmailService"
 import config from "../config";
 import MailTemplates from "../enums/MandrillTemplates";
-import VerificationType from "../enums/VerificationType";
 import PasswordResetToken from "../models/PasswordResetToken";
 import EmailSender from "../enums/EmailSender";
 
@@ -19,7 +17,9 @@ export default {
     signup: async (req: Request)  => {
         const { email, username} = req.body;
         const user = await User.findOne({$or: [{ email }, { username }]});
-        if (user) {
+        console.log({user});
+        
+        if (!!user) {
             return {
                 success: false,
                 message: "User already exists"
@@ -66,6 +66,13 @@ export default {
                 return {
                     success: false,
                     message: "User not found"
+                };
+            }
+
+            if (req.body.password) {
+                return {
+                    success: false,
+                    message: "Password update not allowed"
                 };
             }
       
@@ -135,26 +142,16 @@ export default {
     },
 
     verifyUser: async (req: Request) => {
-        const { verificationType } = req.body;
-        if (!verificationType) {
-            return {
-                success: false,
-                message: "Verification type not specified"
-            }
+        const otpValidityCheck =  await verifyOtp(req);            
+        if (!otpValidityCheck.success) {
+            return otpValidityCheck;
         }
 
-        if (verificationType.toLowerCase() === VerificationType.OTP) {
-            const otpValidityCheck =  await verifyOtp(req);            
-            if (!otpValidityCheck.success) {
-                return otpValidityCheck;
-            }
+        await User.findOneAndUpdate({email: req.params.email}, {isVerified: true}, {new: true});
 
-            await User.findOneAndUpdate({email: req.params.email}, {isVerified: true}, {new: true});
-
-            return {
-                success: true,
-                message: "User verification successful"
-            }
+        return {
+            success: true,
+            message: "User verification successful"
         }
     },
 
@@ -186,8 +183,13 @@ export default {
             }
         }
 
+        const apiToken = crypto.randomBytes(config.tokenLength).toString('hex');
         const loggedInUser = await User.findOneAndUpdate({email: user.email},
-            {isLoggedIn: true, lastLoggedIn: new Date()},
+            {
+                isLoggedIn: true, 
+                lastLoggedIn: new Date(),
+                apiToken
+            },
             {new: true});
             
         return {
