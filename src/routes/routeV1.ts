@@ -7,7 +7,6 @@ const router = express.Router();
 import UserController from "../controllers/UserController";
 import CardController from "../controllers/CardController";
 
-
 //USER
 router.post("/user", basicAuth, UserController.signup);
 router.get("/user", basicAuth, UserController.getAllUsers);
@@ -20,11 +19,12 @@ router.post("/user/forgot-password", basicAuth, UserController.requestPasswordRe
 router.post("/user/reset-password/:token", basicAuth, UserController.resetPassword);
 router.get("/google", passport.authenticate("google", {scope: ["email", "profile"]}));
 router.get("/google/redirect", passport.authenticate("google"), UserController.redirectGoogleSignup);
-router.get("/facebook", passport.authenticate("facebook"));
-router.get("/facebook/callback", passport.authenticate("facebook"), UserController.redirectGoogleSignup);
 
 //CARD
+router.post("/card/property", basicAuth, CardController.createCardProperty);
 router.post("/card", basicAuth, CardController.makeCardRequest);
+router.post("/card/batch", basicAuth, CardController.makeMultipleCardRequest);
+router.post("/card/delivery", basicAuth, CardController.createDelivery);
 
 
 export default router;
