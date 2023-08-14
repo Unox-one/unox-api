@@ -74,7 +74,11 @@ export default {
       company: Joi.string(),
       address: Joi.string().required(),
       city: Joi.string().required(),
-      state: Joi.string().required()
+      state: Joi.string().required(),
+      method: Joi.string(),
+      estimatedDeliveryDate: Joi.date(),
+      cost: Joi.number(),
+      status: Joi.string()
     });
   
     return schema.validate(delivery);
