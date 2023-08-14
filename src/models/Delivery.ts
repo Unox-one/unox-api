@@ -48,6 +48,18 @@ const deliveryShema = new Schema({
     type: String,
     required: true
   },
+  method: {
+    type: String,
+    default: null
+  },
+  estimatedDeliveryDate: {
+    type: Date,
+    default: null
+  },
+  cost: {
+    type: Number,
+    default: null 
+  },
   status: {
     type: String
   },
