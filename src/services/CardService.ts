@@ -107,6 +107,29 @@ export default {
         };
     },
 
+    updateShippingDetails: async (req: Request) => {
+        try {
+            const { deliveryId } = req.params;            
+            const deliveryDetails = await Delivery.findById(deliveryId);      
+            if (!deliveryDetails) {
+                return {
+                    success: false,
+                    message: "Delivery details does not exist"
+                };
+            }
+      
+            const updatedDeliveryDetails = await Delivery.findByIdAndUpdate(deliveryId, req.body, {new:true});
+            return {
+                success: true,
+                message: "Shipping details updated succesfully",
+                updatedDeliveryDetails
+            };
+        } catch (err) {
+            console.log(`Error while updating shipping details: ${err}`);
+            throw new Error(`Error while updating shipping details: ${err}`);
+        }
+    },
+
     createCardProperty: async (req: Request) => {
         const { cardProperty, propertyValue } = req.body;
         if (!cardProperty || !propertyValue) {
