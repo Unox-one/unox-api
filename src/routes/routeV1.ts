@@ -25,6 +25,7 @@ router.post("/card/property", basicAuth, CardController.createCardProperty);
 router.post("/card", basicAuth, CardController.makeCardRequest);
 router.post("/card/batch", basicAuth, CardController.makeMultipleCardRequest);
 router.post("/card/delivery", basicAuth, CardController.createDelivery);
+router.put("/card/delivery/:deliveryId", basicAuth, CardController.updateShippingDetails);
 
 
 export default router;
