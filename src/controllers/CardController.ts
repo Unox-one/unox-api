@@ -53,6 +53,25 @@ export default {
       return sendResponse(req, res, 200, "Create delively attempt", response);
     },
 
+    updateShippingDetails: async (req: Request, res: Response) => {
+      try {
+        const response = await CardService.updateShippingDetails(req);
+
+        if (!response) {
+          return sendResponse(req, res, 400, "Shipping details update failed");
+        }
+  
+        if (!response.success) {
+          return sendResponse(req, res, 400, "Shipping details update attempt", response);
+        }
+        
+        return sendResponse(req, res, 200, "Shipping details update attempt", response);
+      } catch (err) {
+        console.log(`Error while updating shipping details: ${err}`);
+        sendResponse(req, res, 500, `An error occured while processing this request: ${err}`);
+      }
+    },
+
     createCardProperty: async (req: Request, res: Response)  => {
       const response = await CardService.createCardProperty(req);
       if (!response) {
