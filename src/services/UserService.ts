@@ -272,8 +272,24 @@ export default {
             }
         }
 
+        const user = await User.findById(expectedToken.user);
+        if (!user) {
+            return {
+                success: false,
+                message: "User does not exist"
+            }
+        }
+
+        const globalMergeVars = [
+            {
+                name: "user",
+                content: user.fullName? user.fullName.split(" ")[0] : user.username ? user.username : user.email
+            }
+        ]
+
         const hashedPassword = await bcrypt.hash(newPassword, config.saltRounds)
         await User.findByIdAndUpdate(expectedToken.user, {password: hashedPassword}, {new: true});
+        await emailService.sendTemplateEmail(MailTemplates.PASSWORD_RESET_SUCCESS, "PASSWORD RESET CONFIRMATION", EmailSender.NO_REPLY, [{ email: user.email }], globalMergeVars);
     
         return {
             success: true,
