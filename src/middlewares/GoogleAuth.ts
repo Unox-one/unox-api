@@ -3,6 +3,9 @@ import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import config from "../config";
 import User from "../models/User";
 import Utils from "../services/Utils";
+import emailService from "../services/EmailService";
+import MailTemplates from "../enums/MandrillTemplates";
+import EmailSender from "../enums/EmailSender";
 const { google } = config;
 
 
@@ -40,6 +43,14 @@ const googleAuth = () => {
                 };
 
                 await User.create(newUser);
+                const globalMergeVars = [
+                    {
+                        name: "user",
+                        content: name ? name.split(" ")[0] : email
+                    }
+                ]
+    
+                await emailService.sendTemplateEmail(MailTemplates.WELCOME_MESSAGE, "WELCOME MESSAGE", EmailSender.NO_REPLY, [{ email }], globalMergeVars);
             }
 
             done(null, profile);
