@@ -16,7 +16,7 @@ import EmailSender from "../enums/EmailSender";
 export default {
     signup: async (req: Request)  => {
         const { email, username} = req.body;
-        const user = await User.findOne({$or: [{ email }, { username }]});
+        let user = await User.findOne({$or: [{ email }, { username }]});
         
         if (user) {
             return {
@@ -27,13 +27,22 @@ export default {
 
         req.body.email = _.trim(email.toLowerCase());
         req.body.username = !username ? email : username;
-        const savedUser = await User.create(req.body);
+        user = await User.create(req.body);
         console.info(`User cretaed: ${email}`);
+
+        const globalMergeVars = [
+            {
+                name: "user",
+                content: user.fullName? user.fullName.split(" ")[0] : user.username ? user.username : user.email
+            }
+        ]
+
+        await emailService.sendTemplateEmail(MailTemplates.WELCOME_MESSAGE, "WELCOME MESSAGE", EmailSender.NO_REPLY, [{ email: user.email }], globalMergeVars);
 
         return {
             success: true,
             message: "User registration successful",
-            savedUser
+            user
         };
     },
 
