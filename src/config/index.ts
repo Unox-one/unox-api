@@ -25,5 +25,6 @@ export default {
     tokenLength: 32,
     passLegth: 16,
     otpValidityInMinutes: 5,
+    sessionExpiry: "1h",
     passwordGenerationCharacters: process.env.PASSWORD_GENERATION_CHARACTERS || ""
 }
