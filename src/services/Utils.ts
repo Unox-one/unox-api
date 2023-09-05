@@ -1,4 +1,5 @@
 import config from "../config";
+import jwt from 'jsonwebtoken';
 
 
 export default {
@@ -37,5 +38,15 @@ export default {
       }
     
       return password;
+    },
+
+    generateSessionToken: (userData: Record<string, any>): string => {
+      const token = jwt.sign(userData, config.sessionSecret, { expiresIn: config.sessionExpiry });
+      return token;
+    },
+
+    decodeUserToken: (token: string) => {
+      const userPayload = jwt.verify(token, config.sessionSecret);    
+      return userPayload;
     }
 };
