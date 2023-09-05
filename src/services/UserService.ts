@@ -11,6 +11,7 @@ import config from "../config";
 import MailTemplates from "../enums/MandrillTemplates";
 import PasswordResetToken from "../models/PasswordResetToken";
 import EmailSender from "../enums/EmailSender";
+import UserToken from "../models/UserToken";
 
 
 export default {
@@ -30,6 +31,21 @@ export default {
         user = await User.create(req.body);
         console.info(`User cretaed: ${email}`);
 
+        const userPayload = {
+            userId: user._id,
+            username: user.fullName,
+            email: user.email,
+        };
+
+        const token = Utils.generateSessionToken(userPayload);
+        const userToken = new UserToken({
+            user: user._id,
+            token,
+            expiryTime: moment().add(1, "hours").toDate(),
+        });
+        
+        await userToken.save();
+        
         const globalMergeVars = [
             {
                 name: "user",
@@ -42,7 +58,8 @@ export default {
         return {
             success: true,
             message: "User registration successful",
-            user
+            user,
+            token
         };
     },
 
