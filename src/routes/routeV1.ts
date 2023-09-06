@@ -6,8 +6,9 @@ const router = express.Router();
 
 import UserController from "../controllers/UserController";
 import CardController from "../controllers/CardController";
+import MicrositeController from "../controllers/MicrositeController";
 
-//USER
+// USER
 router.post("/user", basicAuth, UserController.signup);
 router.get("/user", basicAuth, UserController.getAllUsers);
 router.get("/user/:userId", basicAuth, UserController.getUserById);
@@ -20,12 +21,16 @@ router.post("/user/reset-password/:token", basicAuth, UserController.resetPasswo
 router.get("/google", passport.authenticate("google", {scope: ["email", "profile"]}));
 router.get("/google/redirect", passport.authenticate("google"), UserController.redirectGoogleSignup);
 
-//CARD
+// CARD
 router.post("/card/property", basicAuth, CardController.createCardProperty);
 router.post("/card", basicAuth, CardController.makeCardRequest);
 router.post("/card/batch", basicAuth, CardController.makeMultipleCardRequest);
 router.post("/card/delivery", basicAuth, CardController.createDelivery);
 router.put("/card/delivery/:deliveryId", basicAuth, CardController.updateShippingDetails);
 
+// MICROSITE
+router.post("/microsite", basicAuth, MicrositeController.createMicrosite);
+router.put("/microsite/:micrositeId", basicAuth, MicrositeController.updateMicrosite);
+router.put("/microsite/:micrositeId/:fieldName", basicAuth, MicrositeController.deleteSelectedMicrositeField);
 
 export default router;
