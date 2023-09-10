@@ -1,6 +1,7 @@
 import { Request } from "express";
 import Microsite from "../models/Microsite";
 import User from "../models/User";
+import Validator from "../models/Validator";
 
 
 export default {
@@ -10,8 +11,16 @@ export default {
             if (!requester) {
                 return {
                     success: false,
-                    message: "User does not exists"
+                    message: "User does not exist"
                 }
+            }
+
+            const validation = Validator.validateMicrosite(req.body);
+            if (validation.error) {
+                return {
+                    success: false,
+                    message: validation.error.details[0].message
+                };
             }
 
             const microsite = await Microsite.create(req.body);
@@ -36,6 +45,14 @@ export default {
                 return {
                     success: false,
                     message: "Microsite does not exist"
+                };
+            }
+
+            const validation = Validator.validateMicrosite(req.body);
+            if (validation.error) {
+                return {
+                    success: false,
+                    message: validation.error.details[0].message
                 };
             }
       
