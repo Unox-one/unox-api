@@ -82,5 +82,24 @@ export default {
     });
   
     return schema.validate(delivery);
+  },
+
+  validateMicrosite: (microsite: Record<string, any>) => {
+    const schema = Joi.object({
+      user: Joi.string(),
+      coverImage: Joi.string(),
+      profileImage: Joi.string(),
+      fullName: Joi.string(),
+      title: Joi.string(),
+      bio: Joi.string(),
+      socialMedia: Joi.array().items(Joi.object({
+        socialMediaType: Joi.string().required(),
+        socialMediaLink: Joi.string().uri().regex(
+          /^(https?:\/\/)?(www\.)?(facebook|twitter|instagram|linkedin|tiktok|thread|youtube)\.com\/[a-zA-Z0-9_.]+\/?$/
+        )
+      }))
+    });
+  
+    return schema.validate(microsite);
   }
 };
