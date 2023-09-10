@@ -1,29 +1,28 @@
+import { ServerClient } from 'postmark';
 import config from "../config";
 
-const mailchimpClient = require("@mailchimp/mailchimp_transactional")(config.mandrillKey);
+
+const postmark = new ServerClient(config.postmarkServerToken);
 
 export default {
-  sendTemplateEmail: (
-    templateName: string,
-    subject: string,
-    sender: string,
-    recipients: { email: string }[],
-    globalMergeVars: {name: string, content: any}[]
+  sendTemplateEmail: async (
+    templateId: number, 
+    sender: string, 
+    recipient: string, 
+    globalMergeVars: Record<string, any>
   ) => {
-    try {      
-      return mailchimpClient.messages.sendTemplate({
-        template_name: templateName,
-        template_content: [],
-        message: {
-          subject : subject,
-          from_email : sender,
-          from_name: 'Unox',
-          to : recipients,
-          global_merge_vars: globalMergeVars
-        }
-      })
+    try {
+      const emailRequest = {
+        From: sender,
+        To: recipient,
+        TemplateId: templateId,
+        TemplateModel: globalMergeVars,
+      };
+    
+      const response = await postmark.sendEmailWithTemplate(emailRequest);
+      console.log('Email sent successfully:', response.To);
     } catch (err) {
-      console.log("Error occured while sending mail: ", err );
+      console.error('Error sending email:', err);
     }
-  },
+  }
 };
