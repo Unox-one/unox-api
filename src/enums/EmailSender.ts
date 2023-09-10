@@ -1,5 +1,5 @@
 const EmailSender = {
-    NO_REPLY: "noreply@unox.one"
+    NO_REPLY: "dev@unox.one"
 }
 
 export default EmailSender;
