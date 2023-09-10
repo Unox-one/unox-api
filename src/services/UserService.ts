@@ -8,7 +8,7 @@ import UserOtp from "../models/UserOtp";
 import Utils from "./Utils";
 import emailService from "./EmailService"
 import config from "../config";
-import MailTemplates from "../enums/MandrillTemplates";
+import MailTemplates from "../enums/PostmarkTemplates";
 import PasswordResetToken from "../models/PasswordResetToken";
 import EmailSender from "../enums/EmailSender";
 import UserToken from "../models/UserToken";
@@ -46,14 +46,11 @@ export default {
         
         await userToken.save();
         
-        const globalMergeVars = [
-            {
-                name: "user",
-                content: user.fullName? user.fullName.split(" ")[0] : user.username ? user.username : user.email
-            }
-        ]
+        const globalMergeVars = {
+            user: user.fullName? user.fullName.split(" ")[0] : user.username ? user.username : user.email
+        }
 
-        await emailService.sendTemplateEmail(MailTemplates.WELCOME_MESSAGE, "WELCOME MESSAGE", EmailSender.NO_REPLY, [{ email: user.email }], globalMergeVars);
+        await emailService.sendTemplateEmail(MailTemplates.WELCOME_MESSAGE, EmailSender.NO_REPLY, user.email, globalMergeVars);
 
         return {
             success: true,
@@ -130,35 +127,17 @@ export default {
         const splitOtp = Utils.splitNumberIntoDigits(Number(otp));
         const filledOtp = Utils.fillArrayWithZeros(splitOtp);
         
-        const globalMergeVars = [
-            {
-                name: "A",
-                content: filledOtp[0]
-            },
-            {
-                name: "B",
-                content: filledOtp[1]
-            },
-            {
-                name: "C",
-                content: filledOtp[2]
-            },
-            {
-                name: "D",
-                content: filledOtp[3]
-            },
-            {
-                name: "E",
-                content: filledOtp[4]
-            },
-            {
-                name: "F",
-                content: filledOtp[5]
-            }
-        ]
+        const globalMergeVars = {
+            A: filledOtp[0],
+            B: filledOtp[1],
+            C: filledOtp[2],
+            D: filledOtp[3],
+            E: filledOtp[4],
+            F: filledOtp[5]
+        };
       
         try {
-          await Promise.all([userOtp.save(), emailService.sendTemplateEmail(MailTemplates.OTP, "VERIFICATION OTP", EmailSender.NO_REPLY, [{ email }], globalMergeVars)]);
+          await Promise.all([userOtp.save(), emailService.sendTemplateEmail(MailTemplates.OTP, EmailSender.NO_REPLY, email, globalMergeVars)]);
           return {success: true, message: "OTP sent to your email address"}
         } catch (err) {
           console.warn(`${email} -> OTP persistence error: ${err}`);
@@ -249,15 +228,12 @@ export default {
             sentTo: user.email
         });
 
-        const globalMergeVars = [
-            {
-                name: "user",
-                content: user.fullName? user.fullName.split(" ")[0] : user.username ? user.username : user.email
-            }
-        ]
+        const globalMergeVars = {
+            user: user.fullName? user.fullName.split(" ")[0] : user.username ? user.username : user.email
+        }
       
         try {
-            await Promise.all([resetToken.save(), emailService.sendTemplateEmail(MailTemplates.RESET_PASSWORD, "RESET PASSWORD", EmailSender.NO_REPLY, [{ email: user.email }], globalMergeVars)]);
+            await Promise.all([resetToken.save(), emailService.sendTemplateEmail(MailTemplates.RESET_PASSWORD, EmailSender.NO_REPLY, user.email, globalMergeVars)]);
             return {
                 success: true,
                 message: "Password reset email sent",
@@ -306,16 +282,13 @@ export default {
             }
         }
 
-        const globalMergeVars = [
-            {
-                name: "user",
-                content: user.fullName? user.fullName.split(" ")[0] : user.username ? user.username : user.email
-            }
-        ]
+        const globalMergeVars = {
+            user: user.fullName? user.fullName.split(" ")[0] : user.username ? user.username : user.email
+        }
 
         const hashedPassword = await bcrypt.hash(newPassword, config.saltRounds)
         await User.findByIdAndUpdate(expectedToken.user, {password: hashedPassword}, {new: true});
-        await emailService.sendTemplateEmail(MailTemplates.PASSWORD_RESET_SUCCESS, "PASSWORD RESET CONFIRMATION", EmailSender.NO_REPLY, [{ email: user.email }], globalMergeVars);
+        await emailService.sendTemplateEmail(MailTemplates.PASSWORD_RESET_SUCCESS, EmailSender.NO_REPLY, user.email, globalMergeVars);
     
         return {
             success: true,
