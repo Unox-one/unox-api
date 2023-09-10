@@ -18,7 +18,7 @@ export default {
         callbackUrl: `${process.env.UNOX_API_URL}/api/google/redirect`
     },
 
-    mandrillKey: process.env.MANDRILL_API_KEY || "",
+    postmarkServerToken: process.env.POSTMARK_SERVER_TOKEN || "",
     sessionSecret: process.env.SESSION_SECRET || "",
     saltRounds : 10,
     otpLength: 6,
