@@ -113,10 +113,9 @@ export default {
         const user = await User.findOne({email});
         if (!user) {
             return {success: false, message: "User does not exist"}
-        }               
-        // const otp = Utils.getRandomNumber(config.otpLength);
-        const otp = "123456";
+        }
         
+        const otp = Utils.getRandomNumber(config.otpLength);
         const userOtp = new UserOtp({
             user: user?._id,
             otp,
