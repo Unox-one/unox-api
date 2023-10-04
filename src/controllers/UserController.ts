@@ -138,6 +138,6 @@ export default {
     },
 
     redirectGoogleSignup: (req: Request, res: Response) => {
-      res.redirect("https://unox-one-staging.netlify.app/about-you?signupType=google");
+      res.redirect("https://unox-fe-2n5cc.ondigitalocean.app/updateuser");
     }
 };
